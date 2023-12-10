@@ -13,8 +13,8 @@ SHELL = /bin/sh
 #=======================================================================
 .EXPORT_ALL_VARIABLES:
 
-# load terminal colour formatting vars from separate file
-include src/make/terminal_colour_formatting.mk
+include src/make/variables.mk # load variables from a separate makefile file
+include src/make/setup.mk # store setup targets in a separate makefile
 #=======================================================================
 # Targets
 #======================================================================
@@ -22,12 +22,13 @@ all: deps install clean
 
 deps:
 	@echo && echo "${INFO}Called makefile target 'deps'. Create virtualenv with required Python libs.${COLOUR_OFF}" && echo
-	@echo "deps called"
+	@echo "Install Terraform"
+	@brew tap hashicorp/tap && brew install hashicorp/tap/terraform
+	@echo "Create the required Snowflake user 'SVC_USER' and role 'CICD_ALL_ROLE'" && echo && make create_svc_cicd_user_and_role
+	@make -s create_svc_cicd_user_and_role
 
 install:
 	@echo && echo "${INFO}Called makefile target 'install'. Set up GX (Great Expectations) project.${COLOUR_OFF}" && echo
-	@brew tap hashicorp/tap
-	@brew install hashicorp/tap/terraform
 
 test:
 	@echo && echo "${INFO}Called makefile target 'test'. Set up GX (Great Expectations) project.${COLOUR_OFF}" && echo
