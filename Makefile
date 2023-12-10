@@ -3,7 +3,7 @@ SHELL = /bin/sh
 #================================================================
 # Usage
 #================================================================
-# make installations	# install the package for the first time, managing dependencies & performing a housekeeping cleanup too
+# make all	# install the package for the first time, managing dependencies & performing a housekeeping cleanup too
 # make deps		# just install the dependencies
 # make install		# perform the end-to-end install
 # make clean		# perform a housekeeping cleanup
