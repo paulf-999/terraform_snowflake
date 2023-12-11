@@ -10,22 +10,41 @@ file_exists() {
   [ -f "$1" ]
 }
 
-# Array of files to create
-files=("tbc/outputs.tf" "tbc/variables.tf" "tbc/main.tf" "tbc/terraform.tfvars")
+# Directories and files to create
+environments=("dev" "staging" "prod")
+files=("main.tf" "variables.tf" "terraform.tfvars")
 
-# Create directories if they don't exist
-for directory in "environments" "modules" "providers" "tbc"; do
-  if ! dir_exists "$directory"; then
-    mkdir "$directory"
-    touch "$directory/.gitkeep"
+# Create 'tbc' directory at the root if it doesn't exist
+tbc_dir="tbc"
+if ! dir_exists "$tbc_dir"; then
+  mkdir "$tbc_dir"
+fi
+
+# Create files in the 'tbc' directory
+for file in "${files[@]}"; do
+  file_path="$tbc_dir/$file"
+  if ! file_exists "$file_path"; then
+    touch "$file_path"
   fi
 done
 
-# Create placeholder Terraform files if they don't exist
-for file in "${files[@]}"; do
-  if ! file_exists "$file"; then
-    touch "$file"
+# Create directories and files for each environment
+for environment in "${environments[@]}"; do
+  dir_path="environments/$environment"
+
+  # Create environment directory if it doesn't exist
+  if ! dir_exists "$dir_path"; then
+    mkdir "$dir_path"
+    touch "$dir_path/.gitkeep"
   fi
+
+  # Create files in the environment directory
+  for file in "${files[@]}"; do
+    file_path="$dir_path/$file"
+    if ! file_exists "$file_path"; then
+      touch "$file_path"
+    fi
+  done
 done
 
 echo "Terraform project structure created successfully!"
