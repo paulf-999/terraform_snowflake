@@ -1,8 +1,13 @@
+# Terraform files
+*.terraform*
+*.tfstate
+*.tfstate.*
+
 # Common credential files
 *.p8
 *creds*
 
-# Private Files
+# Private files
 *.json
 *.csv
 *.csv.gz
