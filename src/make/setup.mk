@@ -1,8 +1,5 @@
 SHELL = /bin/sh
 
-# Load environment variables from .env file
-include .env
-
 # load variables from a separate file
 include src/make/variables.mk
 
@@ -11,12 +8,14 @@ include src/make/variables.mk
 #=======================================================================
 gen_env_template:
 	@echo && echo "Generate the template .env file"
-	@j2 src/jinja_templates/.env_template.j2 -o .env
+	@j2 src/templates/jinja_templates/.env_template.j2 -o .env
+
+validate_env_vars:
+	@echo && echo "${INFO}Called makefile target 'validate_env_vars'. Verify the contents of required env vars.${COLOUR_OFF}" && echo
+	@./src/sh/validate_env_vars.sh config.yaml .env
 
 create_svc_cicd_user_and_role:
-	@echo "------------------------------------------------------------------"
-	@echo "${YELLOW}Target 'create_svc_cicd_user_and_role': create Snowflake service account user/role.${COLOUR_OFF}"
-	@echo "------------------------------------------------------------------" && echo
+	@echo && echo "${INFO}Target 'create_svc_cicd_user_and_role': create Snowflake service account user/role.${COLOUR_OFF}" && echo
 	@echo "1. Create the Snowflake CICD service account user 'SVC_CICD'"
 	@python3 ${SNOWFLAKE_CLIENT_SCRIPT} --sql-file ${CREATE_USER_ROLE_DIR}/1_create_user_svc_cicd.sql
 	@echo && echo "2. Create the Snowflake CICD role, 'CICD_ALL_ROLE'"

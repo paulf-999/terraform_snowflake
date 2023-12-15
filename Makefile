@@ -20,11 +20,13 @@ include src/make/setup.mk # store setup targets in a separate makefile
 #======================================================================
 all: deps install clean
 
-deps:
+deps: validate_env_vars
 	@echo && echo "${INFO}Called makefile target 'deps'. Create virtualenv with required Python libs.${COLOUR_OFF}" && echo
-	@echo "Install Terraform"
-	@brew tap hashicorp/tap && brew install hashicorp/tap/terraform
-	@echo "Create the required Snowflake user 'SVC_USER' and role 'CICD_ALL_ROLE'" && echo && make create_svc_cicd_user_and_role
+	@echo "${DEBUG}1. Install Terraform${COLOUR_OFF}"
+	@./src/sh/install_terraform.sh
+	@echo && echo "${DEBUG}2. Create the required Snowflake user 'SVC_USER' and role 'CICD_ALL_ROLE'${COLOUR_OFF}" && echo
+
+a:
 	@make -s create_svc_cicd_user_and_role
 
 install:
